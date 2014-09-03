@@ -40,7 +40,6 @@ int strToBin(char *str){
  str[0]='0';
  str=strrev(str);
  for(i=0;i<len;i++){
-  printf("%c",str[i]);
   if(str[i]=='1')rv+=pow(2,i);
  }
  printf("\n");
@@ -52,8 +51,8 @@ void anlz(){
  int i,j,val;
  char byt[9];
  char byt2[9];
- printf("Original  ASCII  DECIMAL Parity  T.Error\n");
- printf("--------  ------ ------- ------  -------\n");
+ printf("Original  ASCII  DECIMAL Parity\n");
+ printf("--------  ------ ------- ------\n");
  for(i=0;i<bs;i=i+8){
   for(j=0;j<8;j++){
    byt[j]=dta[i+j];
