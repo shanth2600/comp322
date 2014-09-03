@@ -1,2 +1,2 @@
 all:
-	gcc -o zero-one.exe zero-one.c
+	gcc -o zero-one.exe -w zero-one.c
