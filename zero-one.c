@@ -42,7 +42,6 @@ int strToBin(char *str){
  for(i=0;i<len;i++){
   if(str[i]=='1')rv+=pow(2,i);
  }
- printf("\n");
  str=strrev(str);
  return rv;
 }
