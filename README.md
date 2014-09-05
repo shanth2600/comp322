@@ -1,5 +1,5 @@
 [usage]
-zero-one.exe test.txt
+./zero-one.exe test.txt
 
 [Version info]
 0.0	Created git repository
