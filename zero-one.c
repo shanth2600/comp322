@@ -73,8 +73,8 @@ void anlz(){
   for(j=0;j<8;j++){
    byt[j]=dta[(i*8)+j];
   }
-  for(j=0;j<8-remainderBytes;j++)byt[j]='0';
-  for(j=remainderBytes;j<8;j++)byt[j]=dta[(i*8)+j];
+//  for(j=0;j<8-remainderBytes;j++)byt[j]='0';
+//  for(j=remainderBytes;j<8;j++)byt[j]=dta[(i*8)+j];
   strncpy(byt2,byt,9);
   val=strToBin(byt2);
   prty=cntPrty(byt);
