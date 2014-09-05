@@ -9,3 +9,4 @@
 1.0 Fixing output bugs
 1.1 Adding linux compatibility (strrev and pow)
 1.2 Added incomplete byte padding
+1.3 Added ASCII mnemonics
