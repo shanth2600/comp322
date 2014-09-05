@@ -6,6 +6,19 @@ int maxSize=256;
 int totalBytesRead;
 char *dta=NULL;
 
+
+char *strrev(char *str)
+{
+ char *p1, *p2;
+ if (! str || ! *str)return str;
+ for (p1 = str, p2 = str + strlen(str) - 1; p2 > p1; ++p1, --p2){
+  *p1 ^= *p2;
+  *p2 ^= *p1;
+  *p1 ^= *p2;
+ }
+ return str;
+}
+
 char zcntPrty(char *str){
  int i;
  int ones=0;
@@ -51,20 +64,25 @@ void anlz(){
  int i,j,val;
  char byt[9];
  char byt2[9];
- printf("Original  ASCII  DECIMAL Parity\n");
- printf("--------  ------ ------- ------\n");
+ char prty;
+ printf("Original  ASCII  DECIMAL Parity P.Error\n");
+ printf("--------  ------ ------- ------ -------\n");
  int fullBytes=totalBytesRead/8;
  int remainderBytes=8-totalBytesRead%8;
  for(i=0;i<fullBytes;i++){
   for(j=0;j<8;j++){
    byt[j]=dta[(i*8)+j];
   }
+  for(j=0;j<8-remainderBytes;j++)byt[j]='0';
+  for(j=remainderBytes;j<8;j++)byt[j]=dta[(i*8)+j];
   strncpy(byt2,byt,9);
   val=strToBin(byt2);
+  prty=cntPrty(byt);
   printf("%s       ",byt);
   printf("%c  ",(char)val);
   printf("%d\t",val);
-  printf(" %s    \n",cntPrty(byt)=='o'?"Odd":"Even");
+  printf(" %s  ",prty=='o'?"Odd ":"Even");
+  printf(" %s    \n",prty=='o'?"Error":"Fine");
 
  }
 
