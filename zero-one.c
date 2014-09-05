@@ -51,8 +51,9 @@ int strToBin(char *str){
  int len;
  int rv=0;
  len=8;
- str[0]='0';
  str=strrev(str);
+ str[0]='0';
+// str=strrev(str);
  for(i=0;i<len;i++){
   if(str[i]=='1')rv+=pow(2,i);
  }
@@ -75,6 +76,7 @@ void anlz(){
   }
 //  for(j=0;j<8-remainderBytes;j++)byt[j]='0';
 //  for(j=remainderBytes;j<8;j++)byt[j]=dta[(i*8)+j];
+  byt[9]='\0';
   strncpy(byt2,byt,9);
   val=strToBin(byt2);
   prty=cntPrty(byt);
@@ -83,7 +85,6 @@ void anlz(){
   printf("%d\t",val);
   printf(" %s  ",prty=='o'?"Odd ":"Even");
   printf(" %s    \n",prty=='o'?"Error":"Fine");
-
  }
 
 }
