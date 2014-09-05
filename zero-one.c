@@ -19,19 +19,6 @@ char *strrev(char *str)
  return str;
 }
 
-char zcntPrty(char *str){
- int i;
- int ones=0;
- for(i=0;i<8;i++){
-  if(str[i]=='1')ones++;
- }
-// printf("%s",str);
- printf("%d ",ones);
- if(ones%2>0){
-  return 'o';
- }else return 'e';
-
-}
 
 char cntPrty(char *str){
  int i;
@@ -50,14 +37,12 @@ int strToBin(char *str){
  int i;
  int len;
  int rv=0;
- len=8;
- str=strrev(str);
+ len=7;
  str[0]='0';
-// str=strrev(str);
+ str=strrev(str);
  for(i=0;i<len;i++){
   if(str[i]=='1')rv+=pow(2,i);
  }
- str=strrev(str);
  return rv;
 }
 
@@ -74,9 +59,20 @@ void anlz(){
   for(j=0;j<8;j++){
    byt[j]=dta[(i*8)+j];
   }
-//  for(j=0;j<8-remainderBytes;j++)byt[j]='0';
-//  for(j=remainderBytes;j<8;j++)byt[j]=dta[(i*8)+j];
-  byt[9]='\0';
+  byt[8]='\0';
+  strncpy(byt2,byt,9);
+  val=strToBin(byt2);
+  prty=cntPrty(byt);
+  printf("%s       ",byt);
+  printf("%c  ",(char)val);
+  printf("%d\t",val);
+  printf(" %s  ",prty=='o'?"Odd ":"Even");
+  printf(" %s    \n",prty=='o'?"Error":"Fine"); 
+ }
+// Horrendous hack to pad bits on incomplete byte
+  for(j=0;j<8-remainderBytes;j++)byt[j]='0';
+  for(j=remainderBytes;j<8;j++)byt[j]=dta[fullBytes+j];
+  byt[8]='\0';
   strncpy(byt2,byt,9);
   val=strToBin(byt2);
   prty=cntPrty(byt);
@@ -85,7 +81,7 @@ void anlz(){
   printf("%d\t",val);
   printf(" %s  ",prty=='o'?"Odd ":"Even");
   printf(" %s    \n",prty=='o'?"Error":"Fine");
- }
+
 
 }
 
