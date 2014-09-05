@@ -5,7 +5,7 @@
 int maxSize=256;
 int totalBytesRead;
 char *dta=NULL;
-
+char *asci[32]={"  NUL","  SOH","  STX","  ETX","  EOT","  ENQ","  ACK","  BEL","  BS","  HT","  LF","  VT","  FF","  CR","  SO","  SI","  DLE","  DC1","  DC2","  DC3","  DC4","  NAK","  SYN","  ETB","  CAN","  EM","  SUB","  ESC","  FS","  GS","  RS","  US","SPACE"};
 
 char *strrev(char *str)
 {
@@ -63,11 +63,15 @@ void anlz(){
   strncpy(byt2,byt,9);
   val=strToBin(byt2);
   prty=cntPrty(byt);
-  printf("%s       ",byt);
-  printf("%c  ",(char)val);
+  printf("%s   ",byt);
+  if(val<33){
+   printf("%s    ",asci[val]);
+  }else{
+   printf("    %c    ",(char)val);
+  }
   printf("%d\t",val);
-  printf(" %s  ",prty=='o'?"Odd ":"Even");
-  printf(" %s    \n",prty=='o'?"Error":"Fine"); 
+  printf("  %s  ",prty=='o'?"Odd ":"Even");
+  printf("%s    \n",prty=='o'?"Error":"Fine"); 
  }
 // Horrendous hack to pad bits on incomplete byte
   for(j=0;j<8-remainderBytes;j++)byt[j]='0';
@@ -76,11 +80,15 @@ void anlz(){
   strncpy(byt2,byt,9);
   val=strToBin(byt2);
   prty=cntPrty(byt);
-  printf("%s       ",byt);
-  printf("%c  ",(char)val);
-  printf("%d\t",val);
-  printf(" %s  ",prty=='o'?"Odd ":"Even");
-  printf(" %s    \n",prty=='o'?"Error":"Fine");
+  printf("%s   ",byt);
+  if(val<33){
+   printf("%s    ",asci[val]);
+  }else{
+   printf("    %c   ",(char)val);
+  }
+  printf("%d \t",val);
+  printf("  %s  ",prty=='o'?"Odd ":"Even");
+  printf("%s    \n",prty=='o'?"Error":"Fine");
 
 
 }
