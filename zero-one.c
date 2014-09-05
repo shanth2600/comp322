@@ -2,7 +2,8 @@
 #include <string.h>
 #include <fcntl.h>
 
-int bs=32;
+int maxSize=256;
+int totalBytesRead;
 char *dta=NULL;
 
 char zcntPrty(char *str){
@@ -52,9 +53,11 @@ void anlz(){
  char byt2[9];
  printf("Original  ASCII  DECIMAL Parity\n");
  printf("--------  ------ ------- ------\n");
- for(i=0;i<bs;i=i+8){
+ int fullBytes=totalBytesRead/8;
+ int remainderBytes=8-totalBytesRead%8;
+ for(i=0;i<fullBytes;i++){
   for(j=0;j<8;j++){
-   byt[j]=dta[i+j];
+   byt[j]=dta[(i*8)+j];
   }
   strncpy(byt2,byt,9);
   val=strToBin(byt2);
@@ -62,24 +65,30 @@ void anlz(){
   printf("%c  ",(char)val);
   printf("%d\t",val);
   printf(" %s    \n",cntPrty(byt)=='o'?"Odd":"Even");
+
  }
+
 }
 
 void readFile(int fd){
- int n;
- int i,sz;
+ int i,n,sz;
+ int bs=256;
  char buf[bs];
- read(fd,buf,bs);
- for(i=0;i<bs;i++){
-  if(buf[i]==0)break;
- }
-// sz=32;
- dta=(char *)malloc(bs * sizeof(char));
- for(i=0;i<bs;i++){
-  dta[i]=buf[i];
+ n=1;
+ while(n!=0){
+  n=read(fd,buf,bs);
+  totalBytesRead+=n;
  }
 
+ dta=malloc((totalBytesRead)*sizeof(char));
+
+ for(i=0;i<totalBytesRead;i++){
+
+  dta[i]=buf[i];
+ }
+ dta[totalBytesRead]='\0';
  anlz();
+
 
 }
 
