@@ -24,9 +24,9 @@ void startFork(){
  }else{
   int i,j;
   for(i=0;i<100000000;i++)j=i;
+  exit(0);
  }
  printf("\n");
- exit(0);
 
 
 }
