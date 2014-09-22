@@ -1,19 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 
+
+int findComma(char *args[],int count){
+ int pos=-1;
+ int i;
+ for(i=0;i<count;i++){
+  if(*args[i]==',')pos=i;
+ }
+ return pos;
+}
+void manArray(char *src[],char *dst[],int beg,int end){
+ int i;
+ int j=0;
+ for(i=beg;i<end;i++){
+  dst[j]=src[i];
+  j++;
+ }
+ dst[j]=NULL;
+}
+
 int main(int argc,char* argv[]){
  int pipefd[2];
+ int commaPos;
  pipe(pipefd);
+ commaPos=findComma(argv,argc);
  int cpid1=fork();
  if(cpid1==0){
 //CHILD 1
   dup2(pipefd[1],1);
   close(pipefd[0]);
-  char* newArgv[]={argv[1],NULL};
+  char *newArgv[argc-commaPos+1];
+  manArray(argv,newArgv,1,commaPos);
   char* env[]={NULL};
- printf("Jere\n");
   execve(newArgv[0],&newArgv[0],env);
   exit(0);
  }else{
@@ -22,7 +44,8 @@ int main(int argc,char* argv[]){
 // CHILD 2
    dup2(pipefd[0],0);
    close(pipefd[1]);
-   char* newArgv[3]={argv[2],argv[3],NULL};
+   char* newArgv[3];
+   manArray(argv,newArgv,commaPos+1,argc);
    char* env[]={NULL};
    execve(newArgv[0],&newArgv[0],env);
    exit(0);
