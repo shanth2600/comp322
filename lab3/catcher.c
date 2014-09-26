@@ -45,6 +45,7 @@ int sig_name2number(char *s) {
 
 void hndlr(int sig){
  printf("%s Caught at %d\n",strsignal(sig),time(NULL));
+ signal(sig,hndlr);
  sigCount++;
  if(sig==SIGTERM){
   termCount++;
