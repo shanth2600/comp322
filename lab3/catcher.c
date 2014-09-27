@@ -7,6 +7,13 @@
 int termCount=0;
 int ex=0;
 int sigCount=0;
+char *sigStr[]={"","SIGHUP","SIGINT","SIGQUIT","SIGILL",\
+                "SIGTRAP","SIGABRT","SIGBUS","SIGFPE",\
+                "SIGKILL","SIGUSR1","SIGSEGV","SIGUSR2",\
+                "SIGPIPE","SIGALRM","SIGTERM","SIGSTKFLT",\
+                "SIGCHLD","SIGCONT","SIGSTOP","SIGTSTP","SIGTTIN",\
+                "SIGTTOU","SIGURG","SIGXCPU","SIGXFSZ","SIGVTALRM",\
+                "SIGPROF","SIGWINCH"};
 
 int sig_name2number(char *s) {
  int signumber = -1;
@@ -44,7 +51,7 @@ int sig_name2number(char *s) {
 
 
 void hndlr(int sig){
- printf("%s Caught at %d\n",strsignal(sig),time(NULL));
+ printf("%s Caught at %d\n",sigStr[sig],time(NULL));
  signal(sig,hndlr);
  sigCount++;
  if(sig==SIGTERM){
@@ -55,6 +62,7 @@ void hndlr(int sig){
 
 int main(int argc, char* argv[]){
  int i;
+ 
  if(argc>1){
   fprintf(stderr,"%s PID:%d\n",argv[0],getpid());
   for(i=1;i<argc;i++){
@@ -65,4 +73,5 @@ int main(int argc, char* argv[]){
  }else{
   printf("Not enough args\n");
  }
+ return 0;
 }
