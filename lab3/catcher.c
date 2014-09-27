@@ -56,7 +56,7 @@ void hndlr(int sig){
 int main(int argc, char* argv[]){
  int i;
  if(argc>1){
-  printf("%s PID:%d\n",argv[0],getpid());
+  fprintf(stderr,"%s PID:%d\n",argv[0],getpid());
   for(i=1;i<argc;i++){
    signal(sig_name2number(argv[i]),hndlr);
   }
