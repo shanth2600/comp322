@@ -1,11 +1,8 @@
-EXECUTABLES=catcher
+EXECUTABLES=dining-p
 
-CC = gcc
-CFLAGS = -g
+all: dining-p
 
-all: catcher
-
-catcher: dinin-p.c
+dining-p: dining-p.c
 	gcc -g -lpthread -o dining-p dining-p.c
 
 
