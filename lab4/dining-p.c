@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
   strcpy(semStr2,tmp2);
   chop[0]=sem_open(semStr1, O_CREAT, 0666, 1);
   chop[1]=sem_open(semStr2, O_CREAT, 0666, 1);
-  maxPhil=sem_open("maxPhil", O_CREAT, 0666, 2);
+  maxPhil=sem_open("maxPhil", O_CREAT, 0666, seats/2);
   signal(15,handler);
   do{
    sem_wait(maxPhil);
@@ -70,7 +70,6 @@ int main(int argc, char *argv[]){
    sem_post(chop[1]);
    sem_post(maxPhil);
    think();
-   
    cycles++;
   }while(1);
  }else{
