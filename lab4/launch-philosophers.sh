@@ -22,7 +22,7 @@ count=1
 while [ ${count} -le ${guests} ] ; do
       ./${program} ${seats} ${count} &
       echo $! >> pid.txt
-#      echo "PID of '${program} ${seats} ${count}' is " $!
+      echo "PID of '${program} ${seats} ${count}' is " $!
       count=$(( $count + 1 ))
 done
 
