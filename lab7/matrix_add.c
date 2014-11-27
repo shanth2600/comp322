@@ -62,60 +62,57 @@ int main(int argc,char *argv[]){
   sz=atoi(argv[1]);
   blk=atoi(argv[2]);
   sqrBlk=sqrt(blk);
-  blkSz=((sz/blk)*sizeof(int));
+  blkSz=((sz*sz)/blk);
   construct(sz);
-  prev=malloc(blkSz);
-  curr=malloc(blkSz);
-  next=malloc(blkSz);
+  prev=malloc(blkSz * sizeof(int));
+  curr=malloc(blkSz * sizeof(int));
+  next=malloc(blkSz * sizeof(int));
 // Remember to take this out
+int i;
 buff=malloc((sz*sz) * sizeof(int));
-read(0,buff,(sz*sz));
+i=read(0,buff,64);
+for(i=0;i<sz*sz;i++)fprintf(stderr,"%d\n",buff[i]);
+fprintf(stderr,"---------------------\n");
   memset(&cb, 0, sizeof(struct aiocb));
   memset(&cbw, 0, sizeof(struct aiocb));
   cb.aio_fildes=0;
-  cb.aio_buf=curr;
+  cb.aio_buf=prev;
   cb.aio_offset=0;
-  cb.aio_nbytes=blkSz*4;
+  cb.aio_nbytes=blkSz*sizeof(int);
   cbw.aio_fildes=1;
-  cbw.aio_buf=prev;
+  cbw.aio_buf=curr;
   cbw.aio_offset=0;
-  cbw.aio_nbytes=blkSz*4;
-  aio_read(&cb);
+  cbw.aio_nbytes=blkSz*sizeof(int);
   srand(time(NULL));
   sc=rand()%100;
-  aio_return(&cb);
+  aio_read(&cb); 
   while(aio_error(&cb)==115){}
+  aio_return(&cb);
   currB=0;
+  cb.aio_buf=curr;
   for(x=0;x<sqrBlk;x++){
    for(y=0;y<sqrBlk;y++){
     if(x==0&&y==0)y=1;
-    currB+=blkSz;
-    nextB=currB+blkSz;
-    prevB=currB-blkSz;
-    memcpy(prev,curr,blkSz*4);
-//int i;
-//for(i=0;i<blkSz;i++)fprintf(stderr,"%d\n",prev[i]);
-//return 0;
-//    fprintf(stderr,"prev:%d\ncurr: %d\nnext:%d\n",prevB,currB,nextB);
+    currB+=blkSz*sizeof(int);
+    nextB=currB+(blkSz * sizeof(int));
+    prevB=currB-(blkSz * sizeof(int));
+    cbw.aio_offset=prevB;
+    aio_write(&cbw);
+    while(aio_error(&cbw)==115){}
+    aio_return(&cbw);
     cb.aio_offset=currB;
     aio_read(&cb);
     //addScalar(x,y,blkSz,sc);
     while(aio_error(&cb)==115){}
     aio_return(&cb);
-    cbw.aio_offset=prevB;
-    aio_write(&cbw);
-//printf("%s\n",strerror(aio_error(&cbw)));
-//    memcpy(prev,curr,blkSz);
-    while(aio_error(&cbw)==115){}
-    aio_return(&cbw);
+ memcpy(prev,curr,blkSz*sizeof(int));
    }
   }
-fprintf(stderr,"prev:%d\ncurr: %d\nnext:%d\n",prevB,currB,nextB);
   cbw.aio_offset=currB;
   aio_write(&cbw);
+  for(i=0;i<blkSz;i++)fprintf(stderr,"%d\n",curr[i]);
   while(aio_error(&cbw)==115){}
   aio_return(&cb);
-  //outarr(sz);
  }else{
   printf("Not enough parameters dumb dumb!\n");
  }
