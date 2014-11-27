@@ -27,10 +27,10 @@ int main(int argc,char *argv[]){
  int sz;
  if(argc>1){
    sz=atoi(argv[1]);
-   buff=malloc(sz*sizeof(int));
-   fillBuff(sz);
+   buff=malloc((sz*sz)*sizeof(int));
+   fillBuff(sz*sz);
    f=fdopen(1,"w");
-   fwrite(buff,sizeof(int),sz,f);
+   fwrite(buff,sizeof(int),sz*sz,f);
    fclose(f);
   }else{
   printf("Not enough paramters, dumb dumb\n");
