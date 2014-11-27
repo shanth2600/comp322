@@ -1,11 +1,7 @@
-EXECUTABLES=matrix_gen matrix_add
-all: matrix_gen matrix_add
+all: matrix_add matrix_gen
 
-matrix_gen: matrix_gen
-	gcc matrix_add.c -lm -lrt -o matrix_add
+matrix_gen: matrix_gen.c
+	gcc  -o matrix_gen -c -lm -lrt  matrix_gen.c
 
-matrix_add: matrix_add
-	gcc matrix_add.c -lrt -o matrix_add
-
-clean:
-	rm -f $(EXECUTABLES) $(OBJ) *~
+matrix_add: matrix_add.c
+	gcc  -o  matrix_add -c -lrt  matrix_add.c
