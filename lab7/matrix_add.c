@@ -33,18 +33,14 @@ int *curr;
 int *next;
 
 
-/*void fillArr(int sz){
- int i,j;
- for(i=0;i<sz;i++){
-  for(j=0;j<sz;j++)arr[i][j]=buff[(sz*i)+j];
- }
-}
-*/
+
 void addScalar(int x,int y,int blkSz,int sc){
  int i,j;
- for(i=0;i<blkSz;i++){
-  for(j=0;j<blkSz;j++){
-   arr[i+x][j+y]=curr[i+j]+sc;
+ x=x*sqrt(blkSz);
+ y=y*sqrt(blkSz);
+ for(i=0;i<blkSz/2;i++){
+  for(j=0;j<blkSz/2;j++){
+   arr[x+i][y+j]=prev[i+j]+sc;
   }
  }
 }
@@ -67,12 +63,6 @@ int main(int argc,char *argv[]){
   prev=malloc(blkSz * sizeof(int));
   curr=malloc(blkSz * sizeof(int));
   next=malloc(blkSz * sizeof(int));
-// Remember to take this out
-int i;
-buff=malloc((sz*sz) * sizeof(int));
-i=read(0,buff,64);
-for(i=0;i<sz*sz;i++)fprintf(stderr,"%d\n",buff[i]);
-fprintf(stderr,"---------------------\n");
   memset(&cb, 0, sizeof(struct aiocb));
   memset(&cbw, 0, sizeof(struct aiocb));
   cb.aio_fildes=0;
@@ -96,21 +86,20 @@ fprintf(stderr,"---------------------\n");
     currB+=blkSz*sizeof(int);
     nextB=currB+(blkSz * sizeof(int));
     prevB=currB-(blkSz * sizeof(int));
+    addScalar(x,y,blkSz,sc);
     cbw.aio_offset=prevB;
     aio_write(&cbw);
     while(aio_error(&cbw)==115){}
     aio_return(&cbw);
     cb.aio_offset=currB;
     aio_read(&cb);
-    //addScalar(x,y,blkSz,sc);
     while(aio_error(&cb)==115){}
     aio_return(&cb);
- memcpy(prev,curr,blkSz*sizeof(int));
+    memcpy(prev,curr,blkSz*sizeof(int));
    }
   }
   cbw.aio_offset=currB;
   aio_write(&cbw);
-  for(i=0;i<blkSz;i++)fprintf(stderr,"%d\n",curr[i]);
   while(aio_error(&cbw)==115){}
   aio_return(&cb);
  }else{
