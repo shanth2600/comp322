@@ -16,10 +16,12 @@ void theBluePill(int sz){
 
 void fillBuff(int sz){
  int i;
- int n=-100;
- int m=100;
+ int min=-100;
+ int max=100;
  srand(time(NULL));
- for(i=0;i<sz;i++)buff[i]=rand()/(RAND_MAX/(n-m+1)+1);
+// for(i=0;i<sz;i++)buff[i]=i;
+ for(i=0;i<sz;i++)buff[i]=(rand() % (max+1-min))+min;
+
 }
 
 FILE *f;
