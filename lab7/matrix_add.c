@@ -6,26 +6,22 @@
 #include <fcntl.h>
 #include <math.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <aio.h> 
+#include <time.h>
 
 int **arr;
 
 void outarr(int sz){
  int i,j;
  for(i=0;i<sz;i++){
-  for(j=0;j<sz;j++)printf("%d\n",arr[i][j]);
+  for(j=0;j<sz;j++)fprintf(stderr,"%d\n",arr[i][j]);
  }
 }
 void construct(int sz){
  int i,j;
  arr=(int **)malloc(sz*sizeof(int *));
  for(i=0;i<sz;i++)arr[i]=(int *)malloc(sz*sizeof(int));
-/*
- for(i=0;i<sz;i++){
-  for(j=0;j<sz;j++)arr[i][j]=0;
- }
- outarr(sz);
-*/
 }
 
 int *prev;
@@ -52,8 +48,12 @@ int main(int argc,char *argv[]){
  int blkSz;
  int f,sqrBlk;
  int currB,prevB,nextB;
+ int start=0;
+ int end=0;
  struct aiocb cb;
  struct aiocb cbw;
+ struct timeval tv;
+ struct timeval tv2;
  if(argc>2){
   sz=atoi(argv[1]);
   blk=atoi(argv[2]);
@@ -75,18 +75,31 @@ int main(int argc,char *argv[]){
   cbw.aio_nbytes=blkSz*sizeof(int);
   srand(time(NULL));
   sc=rand()%100;
-  aio_read(&cb); 
+  aio_read(&cb);
+  memset(&tv, 0, sizeof(struct timeval));
+  memset(&tv2, 0, sizeof(struct timeval));
+  gettimeofday(&tv,NULL);
+  start=tv.tv_usec;
+
+
+/*
+buff=malloc(sz*sz*sizeof(int));
+read(0,buff,sz*sz*sizeof(int));
+int i;
+for(i=0;i<sz*sz;i++)fprintf(stderr,"%d\n",buff[i]);
+fprintf(stderr,"---------------------------------\n");
+*/
   while(aio_error(&cb)==115){}
   aio_return(&cb);
   currB=0;
   cb.aio_buf=curr;
   for(x=0;x<sqrBlk;x++){
    for(y=0;y<sqrBlk;y++){
-    if(x==0&&y==0)y=1;
+if(y==0&&x==0)y=1;
     currB+=blkSz*sizeof(int);
     nextB=currB+(blkSz * sizeof(int));
     prevB=currB-(blkSz * sizeof(int));
-    addScalar(x,y,blkSz,sc);
+    addScalar(x,(y==1?0:y),blkSz,sc);
     cbw.aio_offset=prevB;
     aio_write(&cbw);
     while(aio_error(&cbw)==115){}
@@ -102,6 +115,12 @@ int main(int argc,char *argv[]){
   aio_write(&cbw);
   while(aio_error(&cbw)==115){}
   aio_return(&cb);
+  gettimeofday(&tv2,NULL);
+  end=tv2.tv_usec;
+
+  fprintf(stderr,"Time :%d\n",(end-start));
+//  fprintf("Time: %d\n",end);
+//  outarr(sz);
  }else{
   printf("Not enough parameters dumb dumb!\n");
  }
