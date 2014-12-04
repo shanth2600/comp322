@@ -48,11 +48,12 @@ int *buff;
 
 int main(int argc,char *argv[]){
  int blk,sz,c,sc,x,y;
- int blkSz;
+ float blkSz;
  int f,sqrBlk;
  int currB,prevB,nextB;
  int start=0;
  int end=0;
+ int err;
  struct aiocb cb;
  struct aiocb cbw;
  struct timeval tv;
@@ -60,8 +61,12 @@ int main(int argc,char *argv[]){
  if(argc>2){
   sz=atoi(argv[1]);
   blk=atoi(argv[2]);
+  blkSz=(float)(sz*sz)/blk;
+  if((blkSz-(int)blkSz)>0){
+   fprintf(stderr,"A matrix of size %dx%d cannot be evenly divided into %d blocks\n",sz,sz,blk);
+   return 0;
+  }
   sqrBlk=sqrt(blk);
-  blkSz=((sz*sz)/blk);
   construct(sz);
   prev=malloc(blkSz * sizeof(int));
   curr=malloc(blkSz * sizeof(int));
@@ -83,8 +88,6 @@ int main(int argc,char *argv[]){
   memset(&tv2, 0, sizeof(struct timeval));
   gettimeofday(&tv,NULL);
   start=tv.tv_usec;
-
-
 /*
 buff=malloc(sz*sz*sizeof(int));
 read(0,buff,sz*sz*sizeof(int));
@@ -120,7 +123,6 @@ if(y==0&&x==0)y=1;
   aio_return(&cb);
   gettimeofday(&tv2,NULL);
   end=tv2.tv_usec;
-
   fprintf(stderr,"Time :%d\n",(end-start));
 //  fprintf("Time: %d\n",end);
 //  outarr(sz);
