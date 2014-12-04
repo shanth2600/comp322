@@ -34,9 +34,12 @@ void addScalar(int x,int y,int blkSz,int sc){
  int i,j;
  x=x*sqrt(blkSz);
  y=y*sqrt(blkSz);
- for(i=0;i<blkSz/2;i++){
-  for(j=0;j<blkSz/2;j++){
-   arr[x+i][y+j]=prev[i+j]+sc;
+// for(i=0;i<blkSz/2;i++){
+//  for(j=0;j<blkSz/2;j++){
+ for(i=0;i<sqrt(blkSz);i++){
+  for(j=0;j<sqrt(blkSz);j++){
+   arr[x+i][y+j]=0;
+//prev[i+j]+sc;
   }
  }
 }
